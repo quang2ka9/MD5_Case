@@ -9,8 +9,10 @@ const orderDetailService_1 = __importDefault(require("../service/orderDetailServ
 class ProductController {
     constructor() {
         this.findAll = async (req, res) => {
-            let listProduct = await productService_1.default.getAll();
-            res.status(200).json(listProduct);
+            const page = +req.query.page || 1;
+            const pageSize = +req.query.pageSize || 10;
+            const result = await productService_1.default.getAll(page, pageSize);
+            res.status(200).json(result);
         };
         this.addProduct = async (req, res) => {
             await productService_1.default.add(req.body);
@@ -54,6 +56,27 @@ class ProductController {
             await orderDetailService_1.default.addOrderDetail(orderId, product);
             let orderDetails = await orderDetailService_1.default.findOrderDetails(orderId);
             res.status(200).json(orderDetails);
+        };
+        this.findByNameProduct = async (req, res) => {
+            let name = req.query.name;
+            let response = await productService_1.default.findByNameProduct(name);
+            res.status(200).json(response);
+        };
+        this.findByCategoryId = async (req, res) => {
+            let categoryId = req.params.categoryId;
+            let products = await productService_1.default.findByCategoryId(categoryId);
+            res.status(200).json(products);
+        };
+        this.findByPrice = async (req, res) => {
+            try {
+                let min = req.query.min;
+                let max = req.query.max;
+                let response = await productService_1.default.findByPrice(min, max);
+                res.status(200).json(response);
+            }
+            catch (e) {
+                res.status(500).json(e.message);
+            }
         };
     }
 }

@@ -9,8 +9,11 @@ class ProductController {
     }
 
     findAll = async (req: Request, res: Response) => {
-        let listProduct = await productService.getAll();
-        res.status(200).json(listProduct)
+        const page = +req.query.page || 1; // Lấy giá trị trang từ query params hoặc mặc định là trang đầu tiên
+        const pageSize = +req.query.pageSize || 10; // Lấy giá trị kích thước trang từ query params hoặc mặc định là 10 sản phẩm mỗi trang
+
+        const result = await productService.getAll(page, pageSize);
+        res.status(200).json(result);
     }
 
 
@@ -59,6 +62,31 @@ class ProductController {
         let orderDetails = await orderDetailService.findOrderDetails(orderId)
         res.status(200).json(orderDetails)
     }
+
+    findByNameProduct = async (req: Request, res: Response) => {
+            let name = req.query.name;
+            let response = await productService.findByNameProduct(name);
+            res.status(200).json(response)
+    }
+
+    findByCategoryId = async (req: Request, res: Response) => {
+        let categoryId = req.params.categoryId;
+        let products = await productService.findByCategoryId(categoryId);
+        res.status(200).json(products);
+    }
+
+    findByPrice = async (req: Request, res: Response) => {
+        try{
+            let min = req.query.min;
+            let max = req.query.max;
+            let response = await productService.findByPrice(min,max);
+            res.status(200).json(response)
+        }catch (e) {
+            res.status(500).json(e.message)
+        }
+
+    }
+
 }
 
 export default new ProductController();

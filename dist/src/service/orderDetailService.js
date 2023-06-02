@@ -122,8 +122,9 @@ class OrderDetailService {
                         status: "paid"
                     },
                 },
-                relation: {
-                    order: true, product: true
+                relations: {
+                    order: true,
+                    product: true
                 }
             });
         };
