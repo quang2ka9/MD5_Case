@@ -47,7 +47,7 @@ class UserService {
             }
         };
         this.addUserGmail = async (user) => {
-            user.password = await bcrypt_1.default.hash(user.password, 10);
+            user.password = null;
             user.role = 'user';
             return (await this.userRepository.save(user));
         };

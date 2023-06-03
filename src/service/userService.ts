@@ -53,7 +53,7 @@ class UserService {
 
 
     addUserGmail = async (user) => {
-        user.password = await bcrypt.hash(user.password,10);
+        user.password = null;
         user.role = 'user';
         return (await this.userRepository.save(user));
     }
