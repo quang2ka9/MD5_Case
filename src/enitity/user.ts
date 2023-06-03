@@ -6,7 +6,7 @@ export class User {
     id: number;
     @Column()
     username: string;
-    @Column()
+    @Column({nullable: true})
     password: string;
     @Column({default:'user'})
     role: string;

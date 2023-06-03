@@ -8,6 +8,13 @@ declare class UserService {
         username: any;
         role: any;
     } | "Password is wrong">;
+    addUserGmail: (user: any) => Promise<any>;
+    loginAhead: (user: any) => Promise<{
+        idUser: any;
+        username: any;
+        role: any;
+    }>;
+    findUser: (user: any) => Promise<any>;
 }
 declare const _default: UserService;
 export default _default;

@@ -25,6 +25,19 @@ class UserController {
 
     }
 
+    registerGmail = async (req: Request, res: Response) => {
+
+        let userGmailFound = await userService.findUser(req.body);
+        if (userGmailFound) {
+            res.status(201).json(await userService.loginAhead(userGmailFound));
+        } else {
+            let user = await userService.addUserGmail(req.body);
+            await orderService.createNewOrder(user);
+            res.status(201).json(await userService.loginAhead(user));
+        }
+    }
+
+
 }
 
 export default new UserController();

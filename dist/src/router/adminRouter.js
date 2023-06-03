@@ -10,7 +10,7 @@ const adminController_1 = __importDefault(require("../controller/adminController
 const adminRouter = (0, express_1.Router)();
 adminRouter.use(auth_1.auth);
 adminRouter.use(adminAuth_1.adminAuth);
-adminRouter.get('/alluser', adminController_1.default.showAllAcount);
-adminRouter.put('/rerole', adminController_1.default.reRole);
+adminRouter.get('/show', adminController_1.default.showAllAcount);
+adminRouter.put('/role', adminController_1.default.reRole);
 exports.default = adminRouter;
 //# sourceMappingURL=adminRouter.js.map

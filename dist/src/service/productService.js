@@ -5,7 +5,7 @@ const data_source_1 = require("../data-source");
 const typeorm_1 = require("typeorm");
 class ProductService {
     constructor() {
-        this.getAll = async (page, pageSize) => {
+        this.getAll = async (page, pageSize, getTotalCount = false) => {
             const skip = (page - 1) * pageSize;
             const take = pageSize;
             const [products, total] = await this.productRepository.findAndCount({
@@ -16,10 +16,19 @@ class ProductService {
                 take,
             });
             const totalPages = Math.ceil(total / pageSize);
-            return {
-                products,
-                totalPages,
-            };
+            if (getTotalCount) {
+                return {
+                    products,
+                    totalCount: total,
+                    totalPages,
+                };
+            }
+            else {
+                return {
+                    products,
+                    totalPages,
+                };
+            }
         };
         this.add = async (product) => {
             await this.productRepository.save(product);
@@ -49,28 +58,50 @@ class ProductService {
                 .where("id = :id", { id: id })
                 .execute();
         };
-        this.findByNameProduct = async (name) => {
-            let products = await this.productRepository.find({
+        this.findByNameProduct = async (name, page = 1, perPage = 10) => {
+            const skip = (page - 1) * perPage;
+            const take = perPage;
+            const [products, totalCount] = await this.productRepository.findAndCount({
                 relations: {
                     category: true,
                 },
                 where: {
                     name: (0, typeorm_1.Like)(`%${name}%`),
                 },
+                skip,
+                take
             });
-            if (!products) {
+            if (totalCount === 0) {
                 return "product is not exist";
             }
-            return products;
+            const totalPages = Math.ceil(totalCount / perPage);
+            return {
+                products,
+                totalCount,
+                totalPages,
+                currentPage: page,
+                perPage
+            };
         };
-        this.findByCategoryId = async (categoryId) => {
-            const products = await this.productRepository.find({
+        this.findByCategoryId = async (categoryId, page, pageSize) => {
+            const skip = (page - 1) * pageSize;
+            const take = pageSize;
+            const [products, total] = await this.productRepository.findAndCount({
                 where: {
                     category: { id: categoryId },
                 },
-                relations: ["category"],
+                relations: {
+                    category: true,
+                },
+                skip,
+                take,
             });
-            return products;
+            const totalPages = Math.ceil(total / pageSize);
+            return {
+                products,
+                totalCount: total,
+                totalPages,
+            };
         };
         this.findByPrice = async (min, max) => {
             let a = '';

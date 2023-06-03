@@ -9,7 +9,7 @@ const adminRouter = Router();
 
 adminRouter.use(auth);
 adminRouter.use(adminAuth);
-adminRouter.get('/alluser', adminController.showAllAcount);
-adminRouter.put('/rerole', adminController.reRole);
+adminRouter.get('/show', adminController.showAllAcount);
+adminRouter.put('/role', adminController.reRole);
 
 export default adminRouter;

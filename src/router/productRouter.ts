@@ -10,9 +10,10 @@ import {userAuth} from "../middleware/userAuth";
 const productRouter = Router();
 
 productRouter.get('/', productController.findAll);
-productRouter.get('/categories/:categoryId', productController.findByCategoryId);
-productRouter.get('/price', productController.findByPrice)
-productRouter.get('/name', productController.findByNameProduct)
+productRouter.get('/categories/:id', productController.findByCategoryId);
+productRouter.get('/price', productController.findByPrice);
+productRouter.get('/name', productController.findByNameProduct);
+
 productRouter.use(auth);
 productRouter.post('/', adminAuth, productController.addProduct);
 productRouter.delete('/:id', adminAuth, productController.remove);

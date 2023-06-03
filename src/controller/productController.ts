@@ -3,16 +3,23 @@ import productService from "../service/productService";
 import orderService from "../service/orderService";
 import orderDetailService from "../service/orderDetailService";
 
+
 class ProductController {
 
     constructor() {
     }
 
-    findAll = async (req: Request, res: Response) => {
-        const page = +req.query.page || 1; // Lấy giá trị trang từ query params hoặc mặc định là trang đầu tiên
-        const pageSize = +req.query.pageSize || 10; // Lấy giá trị kích thước trang từ query params hoặc mặc định là 10 sản phẩm mỗi trang
 
-        const result = await productService.getAll(page, pageSize);
+    // findAll = async (req: Request, res: Response) => {
+    //     let listProduct = await productService.getAll();
+    //     res.status(200).json(listProduct)
+    // }
+
+    findAll = async (req: Request, res: Response) => {
+        const page = +req.query.page || 1;
+        const pageSize = +req.query.pageSize || 10;
+
+        const result = await productService.getAll(page, pageSize, true);
         res.status(200).json(result);
     }
 
@@ -65,13 +72,17 @@ class ProductController {
 
     findByNameProduct = async (req: Request, res: Response) => {
             let name = req.query.name;
-            let response = await productService.findByNameProduct(name);
+            const page = +req.query.page || 1;
+            const pageSize = +req.query.pageSize || 10;
+            let response = await productService.findByNameProduct(name, page, pageSize);
             res.status(200).json(response)
     }
 
     findByCategoryId = async (req: Request, res: Response) => {
-        let categoryId = req.params.categoryId;
-        let products = await productService.findByCategoryId(categoryId);
+        let categoryId = req.params.id;
+        const page = +req.query.page || 1;
+        const pageSize = +req.query.pageSize || 10;
+        let products = await productService.findByCategoryId(categoryId,page, pageSize);
         res.status(200).json(products);
     }
 

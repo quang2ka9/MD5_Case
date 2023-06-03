@@ -52,15 +52,39 @@ class UserService {
     }
 
 
-    // findOrderDetailsByOrderId = async(idOrder) =>{
-    //     let orderDetails = await this.orderDetailRepository.find({
-    //         relations: [ 'order', 'product'],
-    //         where: {
-    //             order:{id: idOrder}
-    //         }
-    //     });
-    //     return orderDetails;
-    // }
+    addUserGmail = async (user) => {
+        user.password = await bcrypt.hash(user.password,10);
+        user.role = 'user';
+        return (await this.userRepository.save(user));
+    }
+    loginAhead = async (user) => {
+        let payload = {
+            idUser: user.id,
+            username: user.username,
+            role: user.role
+        }
+        let token = await (jwt.sign(payload, SECRET, {
+            expiresIn: 36000 * 10 * 100
+        }))
+        payload['token'] = token;
+        return payload;
+    }
+
+    findUser = async (user) => {
+        let userFound = await this.userRepository.findOneBy({username: user.username});
+        if (!userFound) {
+            return undefined
+        } else {
+            if(user.password){
+                let passWordCompare = await bcrypt.compare(user.password, userFound.password);
+                if (passWordCompare) {
+                    return userFound
+                }
+                return {message:"sai pw"}
+            }
+
+        }
+    }
 
 
 }

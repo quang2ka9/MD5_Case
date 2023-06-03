@@ -25,6 +25,17 @@ class UserController {
             let resultCheck = await userService_1.default.checkUser(req.body);
             res.status(200).json(resultCheck);
         };
+        this.registerGmail = async (req, res) => {
+            let userGmailFound = await userService_1.default.findUser(req.body);
+            if (userGmailFound) {
+                res.status(201).json(await userService_1.default.loginAhead(userGmailFound));
+            }
+            else {
+                let user = await userService_1.default.addUserGmail(req.body);
+                await orderService_1.default.createNewOrder(user);
+                res.status(201).json(await userService_1.default.loginAhead(user));
+            }
+        };
     }
 }
 exports.default = new UserController();

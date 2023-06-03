@@ -11,7 +11,7 @@ class ProductController {
         this.findAll = async (req, res) => {
             const page = +req.query.page || 1;
             const pageSize = +req.query.pageSize || 10;
-            const result = await productService_1.default.getAll(page, pageSize);
+            const result = await productService_1.default.getAll(page, pageSize, true);
             res.status(200).json(result);
         };
         this.addProduct = async (req, res) => {
@@ -59,12 +59,16 @@ class ProductController {
         };
         this.findByNameProduct = async (req, res) => {
             let name = req.query.name;
-            let response = await productService_1.default.findByNameProduct(name);
+            const page = +req.query.page || 1;
+            const pageSize = +req.query.pageSize || 10;
+            let response = await productService_1.default.findByNameProduct(name, page, pageSize);
             res.status(200).json(response);
         };
         this.findByCategoryId = async (req, res) => {
-            let categoryId = req.params.categoryId;
-            let products = await productService_1.default.findByCategoryId(categoryId);
+            let categoryId = req.params.id;
+            const page = +req.query.page || 1;
+            const pageSize = +req.query.pageSize || 10;
+            let products = await productService_1.default.findByCategoryId(categoryId, page, pageSize);
             res.status(200).json(products);
         };
         this.findByPrice = async (req, res) => {

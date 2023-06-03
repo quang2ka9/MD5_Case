@@ -10,16 +10,8 @@ class ProductService {
         this.productRepository = AppDataSource.getRepository(Product)
     }
 
-    // getAll = async () => {
-    //     let products = await this.productRepository.find({
-    //         relations: {
-    //             category: true,
-    //         }
-    //     });
-    //     return products;
-    // }
 
-    getAll = async (page, pageSize) => {
+    getAll = async (page, pageSize, getTotalCount = false) => {
         const skip = (page - 1) * pageSize;
         const take = pageSize;
 
@@ -33,15 +25,25 @@ class ProductService {
 
         const totalPages = Math.ceil(total / pageSize);
 
-        return {
-            products,
-            totalPages,
-        };
+        if (getTotalCount) {
+            return {
+                products,
+                totalCount: total,
+                totalPages,
+            }
+        } else {
+            return {
+                products,
+                totalPages,
+            }
+        }
     }
 
     add = async (product) => {
         await this.productRepository.save(product);
     }
+
+
     remove = async (id) => {
         await this.productRepository
             .createQueryBuilder('Product')
@@ -69,29 +71,61 @@ class ProductService {
     }
 
 
-    findByNameProduct = async (name)=> {
-        let products = await this.productRepository.find({
+
+
+    findByNameProduct = async (name, page = 1, perPage = 10)=> {
+        const skip = (page - 1) * perPage;
+        const take = perPage;
+
+        const [products, totalCount] = await this.productRepository.findAndCount({
             relations: {
                 category: true,
             },
             where: {
-                    name: Like(`%${name}%`),
-                },
-        })
-        if(!products){
+                name: Like(`%${name}%`),
+            },
+            skip,
+            take
+        });
+
+        if(totalCount === 0){
             return "product is not exist";
         }
-        return products;
+
+        const totalPages = Math.ceil(totalCount / perPage);
+
+        return {
+            products,
+            totalCount,
+            totalPages,
+            currentPage: page,
+            perPage
+        };
     }
 
-    findByCategoryId = async (categoryId) => {
-        const products = await this.productRepository.find({
+
+    findByCategoryId = async (categoryId, page, pageSize) => {
+        const skip = (page - 1) * pageSize;
+        const take = pageSize;
+
+        const [products, total] = await this.productRepository.findAndCount({
             where: {
                 category: { id: categoryId },
             },
-            relations: ["category"],
+            relations: {
+                category: true,
+            },
+            skip,
+            take,
         });
-        return products;
+
+        const totalPages = Math.ceil(total / pageSize);
+
+        return {
+            products,
+            totalCount: total,
+            totalPages,
+        };
     }
 
     findByPrice = async (min,max)=> {

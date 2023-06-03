@@ -10,7 +10,7 @@ const adminAuth_1 = require("../middleware/adminAuth");
 const userAuth_1 = require("../middleware/userAuth");
 const productRouter = (0, express_1.Router)();
 productRouter.get('/', productController_1.default.findAll);
-productRouter.get('/categories/:categoryId', productController_1.default.findByCategoryId);
+productRouter.get('/categories/:id', productController_1.default.findByCategoryId);
 productRouter.get('/price', productController_1.default.findByPrice);
 productRouter.get('/name', productController_1.default.findByNameProduct);
 productRouter.use(auth_1.auth);
