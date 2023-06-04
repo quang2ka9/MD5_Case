@@ -40,6 +40,10 @@ class ProductController {
             let product = await productService_1.default.findProductById(id);
             res.status(200).json(product);
         };
+        this.topFiveProduct = async (req, res) => {
+            let product = await productService_1.default.topFiveProducts();
+            res.status(200).json(product);
+        };
         this.editProduct = async (req, res) => {
             let id = req.params.id;
             let product = req.body;

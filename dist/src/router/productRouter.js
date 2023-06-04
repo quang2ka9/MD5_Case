@@ -15,6 +15,7 @@ productRouter.get('/price', productController_1.default.findByPrice);
 productRouter.get('/name', productController_1.default.findByNameProduct);
 productRouter.use(auth_1.auth);
 productRouter.post('/', adminAuth_1.adminAuth, productController_1.default.addProduct);
+productRouter.get('/topFive/excel/file', adminAuth_1.adminAuth, productController_1.default.topFiveProduct);
 productRouter.delete('/:id', adminAuth_1.adminAuth, productController_1.default.remove);
 productRouter.put('/:id', adminAuth_1.adminAuth, productController_1.default.editProduct);
 productRouter.get('/:id', userAuth_1.userAuth, productController_1.default.findProductById);

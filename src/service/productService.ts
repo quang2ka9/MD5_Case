@@ -39,6 +39,16 @@ class ProductService {
         }
     }
 
+    topFiveProducts = async () => {
+       let excel = await this.productRepository
+            .createQueryBuilder('product')
+            .orderBy('product.price', 'DESC')
+            .take(5)
+            .getMany();
+       return excel;
+    }
+
+
     add = async (product) => {
         await this.productRepository.save(product);
     }
@@ -71,9 +81,7 @@ class ProductService {
     }
 
 
-
-
-    findByNameProduct = async (name, page = 1, perPage = 10)=> {
+    findByNameProduct = async (name, page = 1, perPage = 10) => {
         const skip = (page - 1) * perPage;
         const take = perPage;
 
@@ -88,7 +96,7 @@ class ProductService {
             take
         });
 
-        if(totalCount === 0){
+        if (totalCount === 0) {
             return "product is not exist";
         }
 
@@ -110,7 +118,7 @@ class ProductService {
 
         const [products, total] = await this.productRepository.findAndCount({
             where: {
-                category: { id: categoryId },
+                category: {id: categoryId},
             },
             relations: {
                 category: true,
@@ -128,23 +136,23 @@ class ProductService {
         };
     }
 
-    findByPrice = async (min,max)=> {
+    findByPrice = async (min, max) => {
         let a = '';
 
-        if(!min && !max){
-            a=''
-        }else {
+        if (!min && !max) {
+            a = ''
+        } else {
             a = `where p.price >=${min} and p.price <= ${max}`;
         }
-        if(!min){
+        if (!min) {
             a = `where p.price <= ${max}`;
         }
-        if(!max){
+        if (!max) {
             a = `where p.price >= ${min}`;
         }
-        let sql =`select p.id, p.name, p.price, p.quantity, p.image, c.name as nameCategory from product_category pc join product p on pc.idProduct = p.id join category c on pc.idCategory = c.id ${a}`;
+        let sql = `select p.id, p.name, p.price, p.quantity, p.image, c.name as nameCategory from product_category pc join product p on pc.idProduct = p.id join category c on pc.idCategory = c.id ${a}`;
         let product = await this.productRepository.query(sql);
-        if(!product){
+        if (!product) {
             return "Can not find by name";
         }
         return product;

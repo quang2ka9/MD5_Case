@@ -51,6 +51,14 @@ class ProductController {
         let product = await productService.findProductById(id);
         res.status(200).json(product)
     }
+
+
+    topFiveProduct = async (req: Request, res: Response) => {
+        let product = await productService.topFiveProducts();
+
+        res.status(200).json(product)
+    }
+
     editProduct = async (req: Request, res: Response) => {
         let id = req.params.id;
         let product = req.body;

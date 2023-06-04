@@ -16,6 +16,7 @@ productRouter.get('/name', productController.findByNameProduct);
 
 productRouter.use(auth);
 productRouter.post('/', adminAuth, productController.addProduct);
+productRouter.get('/topFive/excel/file',adminAuth, productController.topFiveProduct);
 productRouter.delete('/:id', adminAuth, productController.remove);
 productRouter.put('/:id',adminAuth, productController.editProduct);
 productRouter.get('/:id', userAuth, productController.findProductById);

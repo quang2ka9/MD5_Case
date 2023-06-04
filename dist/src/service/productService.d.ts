@@ -10,6 +10,7 @@ declare class ProductService {
         totalPages: number;
         totalCount?: undefined;
     }>;
+    topFiveProducts: () => Promise<any>;
     add: (product: any) => Promise<void>;
     remove: (id: any) => Promise<void>;
     findProductById: (id: any) => Promise<any>;

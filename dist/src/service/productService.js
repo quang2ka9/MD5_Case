@@ -30,6 +30,14 @@ class ProductService {
                 };
             }
         };
+        this.topFiveProducts = async () => {
+            let excel = await this.productRepository
+                .createQueryBuilder('product')
+                .orderBy('product.price', 'DESC')
+                .take(5)
+                .getMany();
+            return excel;
+        };
         this.add = async (product) => {
             await this.productRepository.save(product);
         };
