@@ -61,8 +61,8 @@ class ProductController {
     }
 
     buyProduct = async (req: Request, res: Response) => {
-        let userId = req['decode'].idUser;
-        let order = await orderService.findOrderByUserId(userId);
+        let decodedUserId  = req['decode'].idUser;
+        let order = await orderService.findOrderByUserId(decodedUserId );
         let orderId = order.id;
         let product = req.body;
         await orderDetailService.addOrderDetail(orderId, product);

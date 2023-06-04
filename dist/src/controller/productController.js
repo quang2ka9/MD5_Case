@@ -49,8 +49,8 @@ class ProductController {
             });
         };
         this.buyProduct = async (req, res) => {
-            let userId = req['decode'].idUser;
-            let order = await orderService_1.default.findOrderByUserId(userId);
+            let decodedUserId = req['decode'].idUser;
+            let order = await orderService_1.default.findOrderByUserId(decodedUserId);
             let orderId = order.id;
             let product = req.body;
             await orderDetailService_1.default.addOrderDetail(orderId, product);

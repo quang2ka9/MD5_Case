@@ -28,7 +28,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Order.prototype, "totalMoney", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" }),
+    (0, typeorm_1.Column)({ type: "datetime", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" }),
     __metadata("design:type", Date)
 ], Order.prototype, "date", void 0);
 __decorate([

@@ -114,17 +114,16 @@ class OrderDetailService {
                 .where({ id: orderId })
                 .execute();
         };
-        this.getHistory = async (orderId) => {
+        this.getHistory = async (id) => {
             return await this.orderDetailRepository.find({
                 where: {
                     order: {
-                        id: orderId,
-                        status: "paid"
+                        id: id,
                     },
                 },
                 relations: {
                     order: true,
-                    product: true
+                    product: true,
                 }
             });
         };

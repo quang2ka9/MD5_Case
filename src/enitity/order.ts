@@ -11,7 +11,7 @@ export class Order {
     status: string;
     @Column({ default: 0 })
     totalMoney: number;
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
+    @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
     public date: Date;
     @OneToMany(() => OrderDetail,(orderDetail) => orderDetail.order)
     orderDetails: OrderDetail[];

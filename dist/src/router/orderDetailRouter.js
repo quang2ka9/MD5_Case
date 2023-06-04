@@ -14,7 +14,7 @@ orderDetailRouter.use(userAuth_1.userAuth);
 orderDetailRouter.post('/add/detail/new', productController_1.default.buyProduct);
 orderDetailRouter.get('/payment/detail', orderDetailController_1.default.getPayment);
 orderDetailRouter.delete('/delete-detail/:id', orderDetailController_1.default.deleteOrderDetail);
-orderDetailRouter.get('/history/detail', orderDetailController_1.default.getHistory);
+orderDetailRouter.get('/history/detail/:id', orderDetailController_1.default.getHistory);
 orderDetailRouter.get('/order-details', orderDetailController_1.default.getOrderDetails);
 orderDetailRouter.post('/plus/detail', productController_1.default.buyProduct);
 orderDetailRouter.post('/minus/detail', productController_1.default.buyProduct);

@@ -20,10 +20,22 @@ class OrderService {
             });
         };
         this.findAllOrderByUserId = async (userId) => {
-            return await this.orderRepository.find({
-                where: { user: userId },
-                relations: { user: true }
+            const options = {
+                where: {
+                    user: { id: userId }
+                },
+                relations: {
+                    user: true,
+                },
+                select: ['id', 'status', 'totalMoney', 'date'],
+                order: { date: 'DESC' },
+            };
+            const orders = await this.orderRepository.find(options);
+            orders.forEach(order => {
+                const formattedDate = order.date.toISOString().split('T')[0];
+                order.date = formattedDate;
             });
+            return orders;
         };
         this.orderRepository = data_source_1.AppDataSource.getRepository(order_1.Order);
     }

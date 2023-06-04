@@ -5,7 +5,6 @@ import {Order} from "../enitity/order";
 import orderDetailRouter from "../router/orderDetailRouter";
 
 
-
 class OrderDetailService {
     private orderDetailRepository;
     private productRepository;
@@ -83,8 +82,8 @@ class OrderDetailService {
         }
     }
 
-    getPayment = async (orderId,userId) => {
-        await this.editOrder(orderId,userId);
+    getPayment = async (orderId, userId) => {
+        await this.editOrder(orderId, userId);
         let orderDetails = await this.orderDetailRepository.find({
             where: {
                 order: {
@@ -96,7 +95,7 @@ class OrderDetailService {
         return orderDetails;
     }
 
-    editOrder = async (orderId,userId) => {
+    editOrder = async (orderId, userId) => {
         let totalMoney = 0;
         let orderDetails = await this.orderDetailRepository.find({
             where: {
@@ -112,8 +111,8 @@ class OrderDetailService {
         await this.orderRepository
             .createQueryBuilder()
             .update(Order)
-            .set({ status:"paid",totalMoney: totalMoney })
-            .where({ id: orderId })
+            .set({status: "paid", totalMoney: totalMoney})
+            .where({id: orderId})
             .execute()
         let newOrder = {
             status: "unpaid",
@@ -129,24 +128,23 @@ class OrderDetailService {
             .createQueryBuilder()
             .delete()
             .from(OrderDetail)
-            .where({ id: orderId })
+            .where({id: orderId})
             .execute()
     }
 
-    getHistory = async (orderId) => {
-         return await this.orderDetailRepository.find({
+    getHistory = async (id) => {
+        return await this.orderDetailRepository.find({
             where: {
-                order : {
-                    id: orderId,
-                    status: "paid"
+                order: {
+                    id: id,
                 },
             },
             relations: {
                 order: true,
-                product: true
+                product: true,
             }
-        })
-    }
+        });
+    };
 
 }
 
