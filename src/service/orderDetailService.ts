@@ -45,7 +45,7 @@ class OrderDetailService {
     }
 
     addOrderDetail = async (orderId, product) => {
-        let existingOrderDetail = await this.orderDetailRepository.findOne({
+        let existOrderDetails = await this.orderDetailRepository.find({
             where: {
                 order: {
                     id: orderId
@@ -56,27 +56,33 @@ class OrderDetailService {
             },
         });
 
-        if (existingOrderDetail) {
+
+        if (existOrderDetails[0]) {
             await this.orderDetailRepository
                 .createQueryBuilder()
                 .update(OrderDetail)
                 .set({
-                    quantity: existingOrderDetail.quantity + 1,
-                    totalPrice: product.price * (existingOrderDetail.quantity + 1),
+                    price: product.price,
+                    quantity: existOrderDetails[0].quantity + product.quantity,
+                    totalPrice: product.price * (existOrderDetails[0].quantity + product.quantity),
+                    order: orderId,
+                    product: product.productId
                 })
-                .where({ order: orderId, product: product.productId })
-                .execute();
+                .where({order: orderId, product: product.productId})
+                .execute()
         } else {
             let newOrderDetail = {
                 price: product.price,
-                quantity: 1,
-                totalPrice: product.price,
+                quantity: product.quantity,
+                totalPrice: product.price * product.quantity,
                 order: orderId,
                 product: product.productId
-            };
+            }
             await this.orderDetailRepository.save(newOrderDetail);
         }
     }
+
+
     getPayment = async (orderId, userId) => {
         await this.editOrder(orderId, userId);
         let orderDetails = await this.orderDetailRepository.find({

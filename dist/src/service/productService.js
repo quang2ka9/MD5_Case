@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const product_1 = require("../enitity/product");
 const data_source_1 = require("../data-source");
 const typeorm_1 = require("typeorm");
+const orderDetail_1 = require("../enitity/orderDetail");
 class ProductService {
     constructor() {
         this.getAll = async (page, pageSize, getTotalCount = false) => {
@@ -42,12 +43,35 @@ class ProductService {
             await this.productRepository.save(product);
         };
         this.remove = async (id) => {
-            await this.productRepository
-                .createQueryBuilder('Product')
-                .delete()
-                .from(product_1.Product)
-                .where("id = :id", { id: id })
-                .execute();
+            let products = await this.orderDetailRepository.find({
+                where: {
+                    product: {
+                        id: id
+                    }
+                }
+            });
+            if (products) {
+                await this.orderDetailRepository
+                    .createQueryBuilder('OrderDetail')
+                    .delete()
+                    .from(orderDetail_1.OrderDetail)
+                    .where({ product: id })
+                    .execute();
+                await this.productRepository
+                    .createQueryBuilder('Product')
+                    .delete()
+                    .from(product_1.Product)
+                    .where({ id: id })
+                    .execute();
+            }
+            else {
+                await this.productRepository
+                    .createQueryBuilder('Product')
+                    .delete()
+                    .from(product_1.Product)
+                    .where({ id: id })
+                    .execute();
+            }
         };
         this.findProductById = async (id) => {
             return await this.productRepository.findOne({
@@ -133,6 +157,7 @@ class ProductService {
             return product;
         };
         this.productRepository = data_source_1.AppDataSource.getRepository(product_1.Product);
+        this.orderDetailRepository = data_source_1.AppDataSource.getRepository(orderDetail_1.OrderDetail);
     }
 }
 exports.default = new ProductService();

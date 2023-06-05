@@ -1,5 +1,6 @@
 declare class ProductService {
     private productRepository;
+    private orderDetailRepository;
     constructor();
     getAll: (page: any, pageSize: any, getTotalCount?: boolean) => Promise<{
         products: any;

@@ -1,13 +1,16 @@
 import {Product} from "../enitity/product";
 import {AppDataSource} from "../data-source";
 import {Like} from "typeorm";
+import {OrderDetail} from "../enitity/orderDetail";
 
 
 class ProductService {
     private productRepository;
+    private orderDetailRepository;
 
     constructor() {
         this.productRepository = AppDataSource.getRepository(Product)
+        this.orderDetailRepository = AppDataSource.getRepository(OrderDetail)
     }
 
 
@@ -55,13 +58,37 @@ class ProductService {
 
 
     remove = async (id) => {
-        await this.productRepository
-            .createQueryBuilder('Product')
-            .delete()
-            .from(Product)
-            .where("id = :id", {id: id})
-            .execute()
+        let products = await this.orderDetailRepository.find({
+            where: {
+                product: {
+                    id: id
+                }
+            }
+        })
+        if (products) {
+            await this.orderDetailRepository
+                .createQueryBuilder('OrderDetail')
+                .delete()
+                .from(OrderDetail)
+                .where({product: id})
+                .execute()
+            await this.productRepository
+                .createQueryBuilder('Product')
+                .delete()
+                .from(Product)
+                .where({id: id})
+                .execute()
+        }
+        else {
+            await this.productRepository
+                .createQueryBuilder('Product')
+                .delete()
+                .from(Product)
+                .where({id: id})
+                .execute()
+        }
     }
+
     findProductById = async (id) => {
         return await this.productRepository.findOne({
             where: {id: id},
